@@ -1,0 +1,118 @@
+trigger:
+  branches:
+    include:
+      - main
+      - feature/*
+
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+# --------------------------------------------------
+# 1. Install Terraform
+# --------------------------------------------------
+- task: TerraformInstaller@1
+  displayName: "Install Terraform"
+  inputs:
+    terraformVersion: "latest"
+
+
+# --------------------------------------------------
+# 2. Terraform Version
+# --------------------------------------------------
+- script: |
+    terraform version
+  displayName: "Terraform Version"
+
+
+# --------------------------------------------------
+# 3. Terraform Init
+# --------------------------------------------------
+- script: |
+    terraform init -backend=false
+  displayName: "Terraform Init"
+
+
+# --------------------------------------------------
+# 4. Terraform Format Check
+# --------------------------------------------------
+- script: |
+    terraform fmt -check -recursive
+  displayName: "Terraform Format Check"
+
+
+# --------------------------------------------------
+# 5. Terraform Validate
+# --------------------------------------------------
+- script: |
+    terraform validate
+  displayName: "Terraform Validate"
+
+
+# --------------------------------------------------
+# 6. Install TFLint
+# --------------------------------------------------
+- script: |
+    curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+    tflint --version
+  displayName: "Install TFLint"
+
+
+# --------------------------------------------------
+# 7. Run TFLint
+# --------------------------------------------------
+- script: |
+    tflint --init
+    tflint --recursive
+  displayName: "TFLint Scan"
+
+
+# --------------------------------------------------
+# 8. Install tfsec
+# --------------------------------------------------
+- script: |
+    curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+    tfsec --version
+  displayName: "Install tfsec"
+
+
+# --------------------------------------------------
+# 9. Run tfsec
+# --------------------------------------------------
+- script: |
+    tfsec .
+  displayName: "Terraform Security Scan"
+
+
+# --------------------------------------------------
+# 10. Install Gitleaks
+# --------------------------------------------------
+- script: |
+    curl -sSfL https://raw.githubusercontent.com/gitleaks/gitleaks/master/scripts/install.sh | sh
+    gitleaks version
+  displayName: "Install Gitleaks"
+
+
+# --------------------------------------------------
+# 11. Run Gitleaks
+# --------------------------------------------------
+- script: |
+    gitleaks detect --source . --verbose
+  displayName: "Secret Scan"
+
+
+# --------------------------------------------------
+# 12. Terraform Plan
+# --------------------------------------------------
+# Azure authentication is required for actual AzureRM plan.
+# Enable this step after Azure Service Connection is configured.
+
+# - script: |
+#     terraform plan -out=tfplan
+#   displayName: "Terraform Plan"
