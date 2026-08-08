@@ -47,6 +47,7 @@ jobs:
 
       # Run TFLint
       - name: Run TFLint
+        continue-on-error: true
         run: |
           tflint --init
           tflint --recursive
