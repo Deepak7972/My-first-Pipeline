@@ -1,0 +1,94 @@
+[
+    {
+        "RuleID": "terraform-admin-username",
+        "Description": "Terraform Admin Username",
+        "StartLine": 57,
+        "EndLine": 57,
+        "StartColumn": 6,
+        "EndColumn": 37,
+        "Match": "admin_username     = \"adminuser\"",
+        "Secret": "adminuser",
+        "File": "terraform.tfvars",
+        "SymlinkFile": "",
+        "Commit": "",
+        "Entropy": 3.169925,
+        "Author": "",
+        "Email": "",
+        "Date": "",
+        "Message": "",
+        "Tags": [
+            "terraform",
+            "username"
+        ],
+        "Fingerprint": "terraform.tfvars:terraform-admin-username:57"
+    },
+    {
+        "RuleID": "terraform-admin-username",
+        "Description": "Terraform Admin Username",
+        "StartLine": 70,
+        "EndLine": 70,
+        "StartColumn": 6,
+        "EndColumn": 37,
+        "Match": "admin_username     = \"adminuser\"",
+        "Secret": "adminuser",
+        "File": "terraform.tfvars",
+        "SymlinkFile": "",
+        "Commit": "",
+        "Entropy": 3.169925,
+        "Author": "",
+        "Email": "",
+        "Date": "",
+        "Message": "",
+        "Tags": [
+            "terraform",
+            "username"
+        ],
+        "Fingerprint": "terraform.tfvars:terraform-admin-username:70"
+    },
+    {
+        "RuleID": "terraform-admin-password",
+        "Description": "Terraform Admin Password",
+        "StartLine": 58,
+        "EndLine": 58,
+        "StartColumn": 6,
+        "EndColumn": 39,
+        "Match": "admin_password     = \"Deepak@1996\"",
+        "Secret": "Deepak@1996",
+        "File": "terraform.tfvars",
+        "SymlinkFile": "",
+        "Commit": "",
+        "Entropy": 3.0957952,
+        "Author": "",
+        "Email": "",
+        "Date": "",
+        "Message": "",
+        "Tags": [
+            "terraform",
+            "password"
+        ],
+        "Fingerprint": "terraform.tfvars:terraform-admin-password:58"
+    },
+    {
+        "RuleID": "terraform-admin-password",
+        "Description": "Terraform Admin Password",
+        "StartLine": 71,
+        "EndLine": 71,
+        "StartColumn": 6,
+        "EndColumn": 39,
+        "Match": "admin_password     = \"Deepak@1996\"",
+        "Secret": "Deepak@1996",
+        "File": "terraform.tfvars",
+        "SymlinkFile": "",
+        "Commit": "",
+        "Entropy": 3.0957952,
+        "Author": "",
+        "Email": "",
+        "Date": "",
+        "Message": "",
+        "Tags": [
+            "terraform",
+            "password"
+        ],
+        "Fingerprint": "terraform.tfvars:terraform-admin-password:71"
+    }
+]

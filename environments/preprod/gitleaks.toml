@@ -1,0 +1,36 @@
+title = "Custom Gitleaks Rules"
+
+[[rules]]
+id = "terraform-admin-password"
+description = "Terraform Admin Password"
+regex = '''(?i)(admin_password|password)\s*=\s*["']([^"']{6,})["']'''
+secretGroup = 2
+tags = ["terraform", "password"]
+
+[[rules]]
+id = "terraform-admin-username"
+description = "Terraform Admin Username"
+regex = '''(?i)(admin_username|username)\s*=\s*["']([^"']+)["']'''
+secretGroup = 2
+tags = ["terraform", "username"]
+
+[[rules]]
+id = "terraform-client-secret"
+description = "Azure Client Secret"
+regex = '''(?i)(client_secret)\s*=\s*["']([^"']+)["']'''
+secretGroup = 2
+tags = ["azure", "secret"]
+
+[[rules]]
+id = "terraform-access-key"
+description = "Access Key"
+regex = '''(?i)(access_key|secret_key)\s*=\s*["']([^"']+)["']'''
+secretGroup = 2
+tags = ["aws", "key"]
+
+[[rules]]
+id = "terraform-connection-string"
+description = "Connection String"
+regex = '''(?i)(connection_string)\s*=\s*["']([^"']+)["']'''
+secretGroup = 2
+tags = ["connection-string"]
