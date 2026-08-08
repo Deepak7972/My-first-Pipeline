@@ -1,118 +1,64 @@
-trigger:
-  branches:
-    include:
+name: Terraform CI
+
+on:
+  push:
+    branches:
       - main
-      - feature/*
+      - "feature/**"
 
-pr:
-  branches:
-    include:
+  pull_request:
+    branches:
       - main
 
-pool:
-  vmImage: ubuntu-latest
+jobs:
+  terraform-check:
+    name: Terraform Checks
+    runs-on: ubuntu-latest
 
-steps:
+    steps:
 
-# --------------------------------------------------
-# 1. Install Terraform
-# --------------------------------------------------
-- task: TerraformInstaller@1
-  displayName: "Install Terraform"
-  inputs:
-    terraformVersion: "latest"
+      # Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
+      # Install Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
 
-# --------------------------------------------------
-# 2. Terraform Version
-# --------------------------------------------------
-- script: |
-    terraform version
-  displayName: "Terraform Version"
+      # Check Terraform version
+      - name: Terraform Version
+        run: terraform version
 
+      # Terraform initialization
+      - name: Terraform Init
+        run: terraform init -backend=false
 
-# --------------------------------------------------
-# 3. Terraform Init
-# --------------------------------------------------
-- script: |
-    terraform init -backend=false
-  displayName: "Terraform Init"
+      # Terraform formatting
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
 
+      # Terraform validation
+      - name: Terraform Validate
+        run: terraform validate
 
-# --------------------------------------------------
-# 4. Terraform Format Check
-# --------------------------------------------------
-- script: |
-    terraform fmt -check -recursive
-  displayName: "Terraform Format Check"
+      # Install TFLint
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v5
 
+      # Run TFLint
+      - name: Run TFLint
+        run: |
+          tflint --init
+          tflint --recursive
 
-# --------------------------------------------------
-# 5. Terraform Validate
-# --------------------------------------------------
-- script: |
-    terraform validate
-  displayName: "Terraform Validate"
+      # Terraform Security Scan
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          soft_fail: false
 
-
-# --------------------------------------------------
-# 6. Install TFLint
-# --------------------------------------------------
-- script: |
-    curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-    tflint --version
-  displayName: "Install TFLint"
-
-
-# --------------------------------------------------
-# 7. Run TFLint
-# --------------------------------------------------
-- script: |
-    tflint --init
-    tflint --recursive
-  displayName: "TFLint Scan"
-
-
-# --------------------------------------------------
-# 8. Install tfsec
-# --------------------------------------------------
-- script: |
-    curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
-    tfsec --version
-  displayName: "Install tfsec"
-
-
-# --------------------------------------------------
-# 9. Run tfsec
-# --------------------------------------------------
-- script: |
-    tfsec .
-  displayName: "Terraform Security Scan"
-
-
-# --------------------------------------------------
-# 10. Install Gitleaks
-# --------------------------------------------------
-- script: |
-    curl -sSfL https://raw.githubusercontent.com/gitleaks/gitleaks/master/scripts/install.sh | sh
-    gitleaks version
-  displayName: "Install Gitleaks"
-
-
-# --------------------------------------------------
-# 11. Run Gitleaks
-# --------------------------------------------------
-- script: |
-    gitleaks detect --source . --verbose
-  displayName: "Secret Scan"
-
-
-# --------------------------------------------------
-# 12. Terraform Plan
-# --------------------------------------------------
-# Azure authentication is required for actual AzureRM plan.
-# Enable this step after Azure Service Connection is configured.
-
-# - script: |
-#     terraform plan -out=tfplan
-#   displayName: "Terraform Plan"
+      # Secret Detection
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
